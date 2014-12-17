@@ -4,7 +4,7 @@ Tests for student enrollment.
 import ddt
 from nose.tools import raises
 import unittest
-from django.test import TestCase
+from django.test import TransactionTestCase
 from django.test.utils import override_settings
 from django.conf import settings
 from enrollment import api
@@ -15,7 +15,7 @@ from enrollment.tests import fake_data_api
 @ddt.ddt
 @override_settings(ENROLLMENT_DATA_API="enrollment.tests.fake_data_api")
 @unittest.skipUnless(settings.ROOT_URLCONF == 'lms.urls', 'Test only valid in lms')
-class EnrollmentTest(TestCase):
+class EnrollmentTest(TransactionTestCase):
     """
     Test student enrollment, especially with different course modes.
     """

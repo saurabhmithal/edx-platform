@@ -7,7 +7,7 @@ import unittest
 
 from django.test.utils import override_settings
 from django.core.urlresolvers import reverse
-from rest_framework.test import APITestCase
+from rest_framework.test import APITransactionTestCase
 from rest_framework import status
 from django.conf import settings
 from xmodule.modulestore.tests.django_utils import (
@@ -31,7 +31,7 @@ MODULESTORE_CONFIG = mixed_store_config(settings.COMMON_TEST_DATA_ROOT, {}, incl
 @ddt.ddt
 @override_settings(MODULESTORE=MODULESTORE_CONFIG)
 @unittest.skipUnless(settings.ROOT_URLCONF == 'lms.urls', 'Test only valid in lms')
-class CourseInfoTest(ModuleStoreTestCase, APITestCase):
+class CourseInfoTest(ModuleStoreTestCase, APITransactionTestCase):
     """
     Test course information.
     """

@@ -3,7 +3,7 @@ Tests authz.py
 """
 import mock
 
-from django.test import TestCase
+from django.test import TransactionTestCase
 from django.contrib.auth.models import User, AnonymousUser
 from django.core.exceptions import PermissionDenied
 
@@ -13,7 +13,7 @@ from student.auth import has_access, add_users, remove_users
 from opaque_keys.edx.locations import SlashSeparatedCourseKey
 
 
-class CreatorGroupTest(TestCase):
+class CreatorGroupTest(TransactionTestCase):
     """
     Tests for the course creator group.
     """
@@ -131,7 +131,7 @@ class CreatorGroupTest(TestCase):
             remove_users(self.admin, CourseCreatorRole(), self.user)
 
 
-class CourseGroupTest(TestCase):
+class CourseGroupTest(TransactionTestCase):
     """
     Tests for instructor and staff groups for a particular course.
     """

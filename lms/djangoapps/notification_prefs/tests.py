@@ -3,7 +3,7 @@ import json
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
-from django.test import TestCase
+from django.test import TransactionTestCase
 from django.test.client import Client, RequestFactory
 from django.test.utils import override_settings
 from mock import Mock, patch
@@ -17,7 +17,7 @@ from util.testing import UrlResetMixin
 
 
 @override_settings(SECRET_KEY="test secret key")
-class NotificationPrefViewTest(UrlResetMixin, TestCase):
+class NotificationPrefViewTest(UrlResetMixin, TransactionTestCase):
     INITIALIZATION_VECTOR = "\x00" * 16
 
     @patch.dict("django.conf.settings.FEATURES", {"ENABLE_DISCUSSION_SERVICE": True})

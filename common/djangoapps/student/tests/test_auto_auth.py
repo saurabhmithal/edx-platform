@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from django.test.client import Client
 from django.contrib.auth.models import User
 from django_comment_common.models import (
@@ -13,7 +13,7 @@ import ddt
 
 
 @ddt.ddt
-class AutoAuthEnabledTestCase(UrlResetMixin, TestCase):
+class AutoAuthEnabledTestCase(UrlResetMixin, TransactionTestCase):
     """
     Tests for the Auto auth view that we have for load testing.
     """
