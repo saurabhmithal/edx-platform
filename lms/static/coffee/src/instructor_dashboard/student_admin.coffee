@@ -41,6 +41,14 @@ class StudentAdmin
     @$btn_task_history_single     = @$section.find "input[name='task-history-single']"
     @$table_task_history_single   = @$section.find ".task-history-single-table"
 
+    # entrance-exam-specific
+    @$field_entrance_exam_student_select_grade  = find_and_assert @$section, "input[name='entrance-exam-student-select-grade']"
+    @$btn_reset_entrance_exam_attempts   = find_and_assert @$section, "input[name='reset-entrance-exam-attempts']"
+    @$btn_delete_entrance_exam_state     = @$section.find "input[name='delete-entrance-exam-state']"
+    @$btn_rescore_entrance_exam          = @$section.find "input[name='rescore-entrance-exam']"
+    @$btn_entrance_exam_task_history     = @$section.find "input[name='entrance-exam-task-history']"
+    @$table_entrance_exam_task_history   = @$section.find ".entrance-exam-task-history-table"
+
     # course-specific
     @$field_problem_select_all    = @$section.find "input[name='problem-select-all']"
     @$btn_reset_attempts_all      = @$section.find "input[name='reset-attempts-all']"
