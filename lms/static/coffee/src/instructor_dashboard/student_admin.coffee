@@ -60,7 +60,7 @@ class StudentAdmin
     # response areas
     @$request_response_error_progress = find_and_assert @$section, ".student-specific-container .request-response-error"
     @$request_response_error_grade    = find_and_assert @$section, ".student-grade-container .request-response-error"
-    @$request_response_error_ee       = find_and_assert @$section, ".student-grade-container .request-response-error"
+    @$request_response_error_ee       = find_and_assert @$section, ".entrance-exam-grade-container .request-response-error"
     @$request_response_error_all      = @$section.find ".course-specific-container .request-response-error"
 
     # attach click handlers
