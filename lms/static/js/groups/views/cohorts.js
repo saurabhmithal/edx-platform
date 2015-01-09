@@ -102,6 +102,7 @@ var edx = edx || {};
             this.removeNotification();
             if (this.editor) {
                 this.editor.setCohort(cohort);
+                $('.cohort-management-group .group-header-title').focus();
             } else {
                 this.editor = new CohortEditorView({
                     el: this.$('.cohort-management-group'),
@@ -111,6 +112,7 @@ var edx = edx || {};
                     context: this.context
                 });
                 this.editor.render();
+                $('.cohort-management-group .group-header-title').focus();
             }
         },
 
@@ -228,6 +230,7 @@ var edx = edx || {};
                         });
                     }
                 }).render();
+                this.$('#file-upload-form-file').focus();
             }
         },
 

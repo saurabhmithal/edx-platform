@@ -9,12 +9,7 @@
 
         <div class="cohort-management-nav-form-select field field-select">
             <label for="cohort-select" class="label sr"><%- gettext("Select a cohort group to manage") %></label>
-            <select class="input cohort-select" name="cohort-select" id="cohort-select">
-            </select>
-        </div>
-
-        <div class="form-actions">
-            <button class="form-submit button action-primary action-view sr"><%- gettext('View Cohort Group') %></button>
+            <select class="input cohort-select" name="cohort-select" id="cohort-select"></select>
         </div>
     </form>
 
