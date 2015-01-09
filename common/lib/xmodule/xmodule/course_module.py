@@ -294,6 +294,12 @@ class CourseFields(object):
         help=_("Enter the unique identifier for your course's video files provided by edX."),
         scope=Scope.settings
     )
+    facebook_url = String(
+        help=_("Enter the url of the official Facebook page of the course."),
+        default="",
+        display_name=_("Course Facebook Page"),
+        scope=Scope.settings
+    )
     no_grade = Boolean(
         display_name=_("Course Not Graded"),
         help=_("Enter true or false. If true, the course will not be graded."),
