@@ -9,7 +9,7 @@ define([
 
     var ContentGroupDetailsView = BaseView.extend({
         tagName: 'div',
-        className: 'group-configuration-details',
+        className: 'group-configuration-details collection-details',
 
         events: {
             'click .edit': 'editGroup'

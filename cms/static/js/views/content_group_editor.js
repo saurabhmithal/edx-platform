@@ -10,7 +10,7 @@ function(ListItemEditorView, _) {
 
     var ContentGroupEditorView = ListItemEditorView.extend({
         tagName: 'div',
-        className: 'group-configuration-edit',
+        className: 'group-configuration-edit collection-edit',
         events: {
             'submit': 'setAndClose',
             'click .action-cancel': 'cancel'

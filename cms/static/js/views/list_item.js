@@ -29,6 +29,7 @@ define([
             var index = this.model.collection.indexOf(this.model);
 
             return [
+                'wrapper-collection',
                 'group-configuration',
                 'group-configurations-list-item',
                 'group-configurations-list-item-' + index
