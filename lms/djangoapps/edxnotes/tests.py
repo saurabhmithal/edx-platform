@@ -3,6 +3,7 @@ Tests for the EdxNotes app.
 """
 import json
 import jwt
+import ddt
 from mock import patch, MagicMock
 from unittest import skipUnless
 from datetime import datetime
@@ -17,7 +18,7 @@ from django.core.exceptions import ImproperlyConfigured
 from oauth2_provider.tests.factories import ClientFactory
 from provider.oauth2.models import Client
 from xmodule.tabs import EdxNotesTab
-from xmodule.modulestore.tests.factories import CourseFactory, ItemFactory
+from xmodule.modulestore.tests.factories import CourseFactory, ItemFactory, check_mongo_calls
 from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase
 from xmodule.modulestore.django import modulestore
 from courseware.model_data import FieldDataCache
@@ -53,6 +54,76 @@ class TestProblem(object):
         Imitate get_html in module.
         """
         return "original_get_html"
+
+
+@ddt.ddt
+class EdxNotesQueryCountTest(TestCase):
+    """Tests for Mongo query count."""
+    def setUp(self):
+        """
+        Setup a dummy course content.
+        """
+        super(EdxNotesQueryCountTest, self).setUp()
+        ClientFactory(name="edx-notes")
+        self.course = CourseFactory.create()
+        self.user = UserFactory.create(username="Joe", email="joe@example.com", password="edx")
+        self.client.login(username=self.user.username, password="edx")
+
+    @ddt.data(
+        (1, 7),  # 1 note
+        (2, 81),  # 32 notes
+        (3, 406),  # 243 notes
+    )
+    @ddt.unpack
+    def test_get_query_count(self, branching_factor, query_count):
+        """
+        Tests for query count.
+        """
+        self.populate_course_with_notes(branching_factor)
+        with check_mongo_calls(query_count):
+            helpers.preprocess_collection(self.user, self.course, self.populated_notes)
+
+    def populate_course(self, branching=2):
+        """
+        Add k chapters, k^2 sections, k^3 verticals, k^4 html modules to self.course (where k = branching)
+        """
+
+        user_id = self.user.id
+        self.populated_usage_keys = {}
+
+        def descend(parent, stack):
+            if not stack:
+                return
+
+            xblock_type = stack[0]
+            for _ in range(branching):
+                child = ItemFactory.create(category=xblock_type, parent_location=parent.location, user_id=user_id)
+                print child.location
+                self.populated_usage_keys.setdefault(xblock_type, []).append(child.location)
+                descend(child, stack[1:])
+
+        descend(self.course, ['chapter', 'sequential', 'vertical', 'html'])
+
+    def populate_course_with_notes(self, branching=2):
+        """
+        Add k chapters, k^2 sections, k^3 verticals, k^4 html modules, k^5 notes to self.course (where k = branching)
+        """
+
+        self.populated_notes = []
+        self.populate_course(branching)
+
+        def create_note(usage_id):
+            return {
+                u"quote": u"quote text",
+                u"text": u"text",
+                u"usage_id": unicode(usage_id),
+                u"updated": datetime(2014, 11, 19, 8, 5, 16, 00000).isoformat(),
+            }
+
+        for usage_id in self.populated_usage_keys.get('html', []):
+            for _ in range(branching):
+                note = create_note(usage_id)
+                self.populated_notes.append(note)
 
 
 @skipUnless(settings.FEATURES["ENABLE_EDXNOTES"], "EdxNotes feature needs to be enabled.")
