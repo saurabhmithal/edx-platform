@@ -73,17 +73,24 @@ def perform_sync(start_date=None, end_date=None, summary_email_to=None):
     if summary_email_to:
         subject = _("Shoppingcart Payment Processor Synchronization Report")
 
-        message = _("A synchronization of the Shoppingcart with the Payment Processor has been completed\n\nstart_date = {start_date}  end_date = {end_date}  num_processed = {num_processed}  rows_in_error = {rows_in_error}".format(
+        message = _(
+            "A synchronization of the Shoppingcart with the Payment Processor "
+            "has been completed\n\n"
+            "start_date = {start_date}  "
+            "end_date = {end_date}  "
+            "num_processed = {num_processed}  "
+            "rows_in_error = {rows_in_error}"
+        ).format(
             start_date=start_date,
             end_date=end_date,
             num_processed=num_processed,
-            rows_in_error=num_in_err)
+            rows_in_error=num_in_err,
         )
 
         if errors:
-            message = message + (_("\n\nDUMP OF ERRORS FOUND:"))
+            message = message + "\n\n" + _("DUMP OF ERRORS FOUND:")
             for error in errors:
-                message = message + ("\n\n{}".format(error))
+                message = message + "\n\n{}".format(error)
 
         to_email = [summary_email_to]
         from_email = settings.PAYMENT_SUPPORT_EMAIL

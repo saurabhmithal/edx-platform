@@ -1666,14 +1666,22 @@ class PaymentProcessorTransaction(TimeStampedModel):
     def create(cls, remote_transaction_id, account_id, processed_at, order_id, currency, amount, transaction_type):
         """
         This classmethod will create a new entry in the PaymentProcessorTransaction table
-        It will use a get_or_create() at the ORM level. We enforce that a Transaction is immutable and we therefore will
+        It will use a get_or_create() at the ORM level.
+        We enforce that a Transaction is immutable and we therefore will
         not support update cases
         """
 
         try:
             order = Order.objects.get(id=order_id)
         except Order.DoesNotExist:
-            raise OrderDoesNotExistException('Transaction {transaction_id} refers to order_id {order_id} but it cannot be found!'.format(transaction_id=remote_transaction_id, order_id=order_id))
+            msg = (
+                'Transaction {transaction_id} refers to order_id {order_id} '
+                'but it cannot be found!'
+            ).format(
+                transaction_id=remote_transaction_id,
+                order_id=order_id,
+            )
+            raise OrderDoesNotExistException(msg)
 
         cc_transaction = PaymentProcessorTransaction(
             remote_transaction_id=remote_transaction_id,
@@ -1693,7 +1701,13 @@ class PaymentProcessorTransaction(TimeStampedModel):
             existing = cls.get_by_remote_transaction_id(remote_transaction_id)
 
             if cc_transaction != existing:
-                raise IntegrityError("Attempting to change an existing transaction ({transaction_id}). This is not allowed!".format(transaction_id=remote_transaction_id))
+                msg = (
+                    "Attempting to change an existing transaction ({transaction_id}). "
+                    "This is not allowed!"
+                ).format(
+                    transaction_id=remote_transaction_id,
+                )
+                raise IntegrityError(msg)
 
             # if transactions have same data, then we just do nothing
         else:
@@ -1731,8 +1745,9 @@ class PaymentProcessorTransaction(TimeStampedModel):
     @classmethod
     def get_transaction_totals_for_course(cls, course_key, start=None, end=None):
         """
-        Returns aggregates sums for a course grouped by transaction_type. The caller can specify an optional start/end date
-        to get time slices of the data
+        Returns aggregates sums for a course grouped by transaction_type.
+        The caller can specify an optional start/end date to get
+        time slices of the data
 
         The result set will look like:
 
@@ -1775,7 +1790,14 @@ class PaymentProcessorTransaction(TimeStampedModel):
 
         # 1: We should only have a transaction for a Order that has a status='purchased'
         if self.order.status != 'purchased':  # pylint: disable=no-member
-            raise ValidationError('remote_transaction_id {} was received for order {} but it does not have a purchased status'.format(self.remote_transaction_id, self.order.id))  # pylint: disable=no-member
+            msg = (
+                'remote_transaction_id {tid} was received for order {oid} '
+                'but it does not have a purchased status'
+            ).format(
+                tid=self.remote_transaction_id,
+                oid=self.order.id,  # pylint: disable=no-member
+            )  # pylint: disable=no-member
+            raise ValidationError(msg)
 
         # 2: The transaction amount should be exactly the same as all OrderItems on the Order
         # As we don't support partial payments or refunds
@@ -1783,14 +1805,28 @@ class PaymentProcessorTransaction(TimeStampedModel):
 
         if self.transaction_type == TRANSACTION_TYPE_PURCHASE:
             if self.amount != total:
-                raise ValidationError('remote_transaction_id {} has purchase amount of {} but Order {} has a sum of {}'.format(
-                    self.remote_transaction_id, self.amount, self.order.id, total  # pylint: disable=no-member
-                ))
+                msg = (
+                    'remote_transaction_id {tid} has purchase amount of {amount} '
+                    'but Order {oid} has a sum of {total}'
+                ).format(
+                    tid=self.remote_transaction_id,
+                    amount=self.amount,
+                    oid=self.order.id,  # pylint: disable=no-member
+                    total=total,
+                )
+                raise ValidationError(msg)
         elif self.transaction_type == TRANSACTION_TYPE_REFUND:
             if self.amount != -total:
-                raise ValidationError('remote_transaction_id {} has refund amount of {} but Order {} has a sum of {}'.format(
-                    self.remote_transaction_id, self.amount, self.order.id, total  # pylint: disable=no-member
-                ))
+                msg = (
+                    'remote_transaction_id {tid} has refund amount of {amount} '
+                    'but Order {oid} has a sum of {total}'
+                ).format(
+                    tid=self.remote_transaction_id,
+                    amount=self.amount,
+                    oid=self.order.id,  # pylint: disable=no-member
+                    total=total,
+                )
+                raise ValidationError(msg)
         else:
             raise ValidationError('Unknown transaction_type = {}'.format(self.transaction_type))
 
@@ -1828,14 +1864,19 @@ def post_transaction_save(sender, **kwargs):  # pylint: disable=unused-argument
 
         for item in order_items:
             if hasattr(item, 'course_id'):
+                # we can assume that the sum of all line items matches
+                # the amount in the transaction as we
+                # assert against that fact in the pre-save validation
+                if cc_transaction.transaction_type == TRANSACTION_TYPE_PURCHASE:
+                    amount = item.line_cost
+                else:
+                    amount = -item.line_cost
+
                 course_map = PaymentTransactionCourseMap(
                     transaction=cc_transaction,
                     course_id=getattr(item, 'course_id'),
                     order_item=item,
-                    # we can assume that the sum of all line items matches
-                    # the amount in the transaction as we
-                    # assert against that fact in the pre-save validation
-                    amount=item.line_cost if cc_transaction.transaction_type == TRANSACTION_TYPE_PURCHASE else -item.line_cost,
+                    amount=amount,
                     currency=cc_transaction.currency
                 )
                 course_map.save()
@@ -1856,7 +1897,7 @@ class PaymentTransactionCourseMap(models.Model):
     currency = models.CharField(max_length=16)
     amount = models.DecimalField(decimal_places=2, max_digits=30)
 
-    class Meta:  # pylint: disable=missing-docstring
+    class Meta(object):  # pylint: disable=missing-docstring
         unique_together = (('transaction', 'course_id', 'order_item'),)
 
 

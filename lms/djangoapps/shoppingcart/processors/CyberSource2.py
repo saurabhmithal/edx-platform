@@ -682,17 +682,21 @@ def synchronize_transactions(start_date, end_date):
     num_in_err = 0
     errs = []
 
-    log.info('Starting transaction synchronization from {} to {}'.format(start_date, end_date))
+    log.info('Starting transaction synchronization from {start} to {end}'.format(
+        start=start_date, end=end_date,
+    ))
 
     # CyberSource only supports getting a report for a single day
     while cur_date < end_date:
-        log.info('\nSynchronizing transaction report data for day: {}'.format(cur_date))
+        log.info('\nSynchronizing transaction report data for day: {0}'.format(cur_date))
         daily_report = get_report_data(cur_date)
         num_fetched = num_fetched + len(daily_report)
-        log.info('Got {} records'.format(num_fetched))
+        log.info('Got {num} records'.format(num=num_fetched))
 
         _num_processed, _num_in_err, _errs = process_report_data(daily_report)
-        log.info('{} records successfully processed, {} records failed'.format(_num_processed, _num_in_err))
+        log.info('{success_num} records successfully processed, {err_num} records failed'.format(
+            success_num=_num_processed, err_num=_num_in_err,
+        ))
         num_processed = num_processed + _num_processed
         num_in_err = num_in_err + _num_in_err
         errs.extend(_errs)
@@ -740,7 +744,10 @@ def get_report_data_for_account(account_name, config, date):
 
         # CyberSource will not support downloading of data more than 180 days old
         if now - date >= timedelta(179):
-            log.info('CyberSource does not support getting transaction dumps more than 180 days old. Returning empty set.')
+            log.info(
+                'CyberSource does not support getting transaction dumps more than '
+                '180 days old. Returning empty set.'
+            )
             return []
 
         # Can't ask for things in the future or even today's report
@@ -750,7 +757,10 @@ def get_report_data_for_account(account_name, config, date):
     if response.status_code == 403:
         raise CCProcessorFailedSyncronization('HTTP Auth Credentials for Report Services failed or were locked out!')
     elif response.status_code != 200:
-        raise CCProcessorFailedSyncronization('PaymentBatchDetailReport failed with status code of {status_code}!'.format(status_code=response.status_code))
+        msg = 'PaymentBatchDetailReport failed with status code of {status_code}!'.format(
+            status_code=response.status_code
+        )
+        raise CCProcessorFailedSyncronization(msg)
 
     # Parse the CSV
     csv_buffer = StringIO.StringIO(response.content)
@@ -855,7 +865,7 @@ def process_report_data(data):
                 'raw_data': row,
                 'err_msg': repr(ex)
             }
-            log.error('Failed to process record: {}'.format(err))
+            log.error('Failed to process record: {err}'.format(err=err))
             PaymentTransactionSyncError.create_and_save(
                 err['remote_transaction_id'],
                 err['raw_data'],

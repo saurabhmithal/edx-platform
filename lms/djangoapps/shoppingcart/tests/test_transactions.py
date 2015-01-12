@@ -94,11 +94,15 @@ class PaymentProcessorTransactionModelTests(ModuleStoreTestCase):
         self.assertEqual(len(queryset), 1)
         self.assertEqual(queryset[0].transaction, transaction)
 
-        queryset = PaymentProcessorTransaction.get_transactions_for_course(self.course_key, transaction_type=TRANSACTION_TYPE_PURCHASE)
+        queryset = PaymentProcessorTransaction.get_transactions_for_course(
+            self.course_key, transaction_type=TRANSACTION_TYPE_PURCHASE,
+        )
         self.assertEqual(len(queryset), 1)
         self.assertEqual(queryset[0].transaction, transaction)
 
-        queryset = PaymentProcessorTransaction.get_transactions_for_course(self.course_key, transaction_type=TRANSACTION_TYPE_REFUND)
+        queryset = PaymentProcessorTransaction.get_transactions_for_course(
+            self.course_key, transaction_type=TRANSACTION_TYPE_REFUND,
+        )
         self.assertEqual(len(queryset), 0)
 
         # check some of the totals
