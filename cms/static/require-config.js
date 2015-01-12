@@ -67,7 +67,7 @@ require.config({
 
         // externally hosted files
         "tender": [
-            "//edxedge.tenderapp.com/tender_widget",
+            "//" + (window.TENDER_DOMAIN || "api.tenderapp.com") + "/tender_widget",
             // if tender fails to load, fallback on a local file
             // so that require doesn't fall over
             "js/src/tender_fallback"
