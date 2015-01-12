@@ -24,6 +24,7 @@ function(ListItemEditorView, _, $, gettext, ExperimentGroupEditView) {
             var index = this.model.collection.indexOf(this.model);
 
             return [
+                'collection-edit',
                 'group-configuration-edit',
                 'group-configuration-edit-' + index
             ].join(' ');

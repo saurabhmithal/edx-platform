@@ -113,7 +113,8 @@
           }
         }
 
-        &.collection-info-block {
+        &.collection-info {
+
           li {
             padding: ($baseline/4) 0;
           }
@@ -257,6 +258,10 @@
         border-radius: 2px;
         width: 100%;
         background: $white;
+
+        .message {
+          margin-bottom: 0;
+        }
 
         .wrapper-form {
           padding: $baseline ($baseline*1.5);
@@ -957,21 +962,126 @@
     //specific group-type styles
     .content-groups {
 
-      .title {
-        margin-bottom: 0;
+      .collection-header{
+
+         .title {
+          margin-bottom: 0;
+        }
       }
     }
 
     .experiment-groups {
 
+      .group-configuration-info {
+        @extend %t-copy-sub1;
+        color: $gray-l1;
+        margin-left: $baseline;
+
+        &.group-configuration-info-inline {
+          display: table;
+          width: 70%;
+          margin: ($baseline/4) 0 ($baseline/2) $baseline;
+
+          li {
+            @include box-sizing(border-box);
+            display: table-cell;
+            margin-right: 1%;
+
+            &.group-configuration-usage-count {
+              font-style: italic;
+            }
+          }
+        }
+
+        &.group-configuration-info-block {
+          li {
+            padding: ($baseline/4) 0;
+          }
+        }
+
+        .group-configuration-label {
+          text-transform: uppercase;
+        }
+
+        .group-configuration-description {
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      .groups {
+        margin-left: $baseline;
+        margin-bottom: ($baseline*0.75);
+
+        .group {
+          @extend %t-copy-lead1;
+          padding: ($baseline/7) 0 ($baseline/4);
+          border-top: 1px solid $gray-l4;
+          white-space: nowrap;
+
+          &:first-child {
+            border-top: none;
+          }
+
+          .group-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block;
+            vertical-align: middle;
+            width: 75%;
+            margin-right: 5%;
+          }
+
+          .group-allocation {
+            display: inline-block;
+            vertical-align: middle;
+            width: 20%;
+            color: $gray-l1;
+            text-align: right;
+          }
+        }
+      }
+
+      .group-configuration-info {
+        @extend %t-copy-sub1;
+        color: $gray-l1;
+        margin-left: $baseline;
+
+        &.group-configuration-info-inline {
+          display: table;
+          width: 70%;
+          margin: ($baseline/4) 0 ($baseline/2) $baseline;
+
+          li {
+            @include box-sizing(border-box);
+            display: table-cell;
+            margin-right: 1%;
+
+            &.group-configuration-usage-count {
+              font-style: italic;
+            }
+          }
+        }
+
+        &.group-configuration-info-block {
+          li {
+            padding: ($baseline/4) 0;
+          }
+        }
+
+        .group-configuration-label {
+          text-transform: uppercase;
+        }
+
+        .group-configuration-description {
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
     }
   }
 
   .content-supplementary {
     width: flex-grid(3, 12);
-
-    .content-groups-doc {
-      margin-bottom: $baseline;
-    }
   }
 }
