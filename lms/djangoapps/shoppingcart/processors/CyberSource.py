@@ -456,4 +456,4 @@ def sychronize_transactions(start_date, end_date):  # pylint: disable=unused-arg
     """
     Concrete implementation of the API
     """
-    raise Exception("Not implemented")
+    raise NotImplementedError()
