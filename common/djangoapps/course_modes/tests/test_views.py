@@ -1,6 +1,7 @@
 import unittest
 import decimal
 import ddt
+from mock import patch
 from django.conf import settings
 from django.test.utils import override_settings
 from django.core.urlresolvers import reverse
@@ -13,6 +14,7 @@ from xmodule.modulestore.tests.factories import CourseFactory
 from course_modes.tests.factories import CourseModeFactory
 from student.tests.factories import CourseEnrollmentFactory, UserFactory
 from student.models import CourseEnrollment
+from course_modes.models import CourseMode
 
 
 # Since we don't need any XML course fixtures, use a modulestore configuration
@@ -235,3 +237,15 @@ class CourseModeViewTest(ModuleStoreTestCase):
         response = self.client.post(choose_track_url, self.POST_PARAMS_FOR_COURSE_MODE['unsupported'])
 
         self.assertEqual(400, response.status_code)
+
+    @unittest.skipUnless(settings.ROOT_URLCONF == 'lms.urls', 'Test only valid in lms')
+    @patch.dict("django.conf.settings.FEATURES", {"MODE_CREATION_FOR_TESTING": True})
+    def test_mode_creation_for_testing(self):
+        # TODO/WIP: Only checks honor mode creation; should check verified and professional as well
+        url = reverse('create_mode', args=[unicode(self.course.id)])
+        response = self.client.get(url)
+
+        self.assertEquals(response.status_code, 200)
+
+        course_modes = CourseMode.modes_for_course(self.course.id)
+        self.assertEquals(course_modes[0].slug, 'honor')

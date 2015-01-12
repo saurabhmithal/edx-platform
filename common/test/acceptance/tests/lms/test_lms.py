@@ -10,6 +10,7 @@ from nose.plugins.attrib import attr
 from bok_choy.web_app_test import WebAppTest
 from ..helpers import UniqueCourseTest, load_data_str
 from ...pages.lms.auto_auth import AutoAuthPage
+from ...pages.lms.create_mode import ModeCreationPage
 from ...pages.common.logout import LogoutPage
 from ...pages.lms.find_courses import FindCoursesPage
 from ...pages.lms.course_about import CourseAboutPage
@@ -234,14 +235,9 @@ class PayAndVerifyTest(UniqueCourseTest):
     def setUp(self):
         """Initialize the page objects, create a test course, create a user and log them in."""
         super(PayAndVerifyTest, self).setUp()
-        self.track_selection_page = TrackSelectionPage(
-            self.browser,
-            course_id=self.course_id,
-            separate_verified=True
-        )
+        self.track_selection_page = TrackSelectionPage(self.browser, self.course_id, separate_verified=True)
 
-        # Create a course to enroll in
-        # TODO: How to give this course a verified mode?
+        # Create a course
         CourseFixture(
             self.course_info['org'],
             self.course_info['number'],
@@ -249,11 +245,16 @@ class PayAndVerifyTest(UniqueCourseTest):
             self.course_info['display_name']
         ).install()
 
+        # Add an honor mode to the course
+        ModeCreationPage(self.browser, self.course_id).visit()
+
+        # Add a verified mode to the course
+        ModeCreationPage(self.browser, self.course_id, mode_slug='verified', mode_display_name='Verified Certificate').visit()
+
         # Create a user and log them in
         AutoAuthPage(self.browser).visit()
 
     def test_verified_enroll(self):
-        DashboardPage(self.browser).visit()
         # Navigate to the track selection page
         self.track_selection_page.visit()
 
