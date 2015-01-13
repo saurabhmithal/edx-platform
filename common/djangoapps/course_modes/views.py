@@ -251,11 +251,11 @@ def create_mode(request, course_id):
         Response
     """
     PARAMETERS = {
-        'mode_slug': 'honor',
-        'mode_display_name': 'Honor Code',
+        'mode_slug': u'honor',
+        'mode_display_name': u'Honor Code Certificate',
         'min_price': 0,
-        'suggested_prices': '',
-        'currency': 'usd',
+        'suggested_prices': u'',
+        'currency': u'usd',
     }
 
     # Try pulling querystring parameters out of the request
