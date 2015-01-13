@@ -83,7 +83,7 @@ define(["jquery", "underscore", "gettext", "js/models/asset", "js/views/paging",
             renderPageItems: function() {
                 var self = this,
                 assets = this.collection,
-                hasAssets = this.collection.assetType != '' || assets.length > 0,
+                hasAssets = this.collection.assetType !== '' || assets.length > 0,
                 tableBody = this.getTableBody();
                 tableBody.empty();
                 if (hasAssets) {

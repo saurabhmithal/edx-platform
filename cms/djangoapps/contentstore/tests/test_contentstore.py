@@ -139,11 +139,6 @@ class ImportRequiredTestCases(ContentStoreTestCase):
         all_assets, __ = content_store.get_all_content_for_course(course.id)
         self.assertGreater(len(all_assets), 0)
 
-        # make sure asset filtering works in our contentstore
-        filter_params = _build_other_filter()
-        filtered_assets, __ = content_store.get_all_content_for_course(course.id, filter_params=filter_params)
-        self.assertGreater(len(all_assets), len(filtered_assets))
-
         # make sure we have some thumbnails in our contentstore
         all_thumbnails = content_store.get_all_content_thumbnails_for_course(course.id)
         self.assertGreater(len(all_thumbnails), 0)
@@ -1762,18 +1757,3 @@ def _get_course_id(course_data, key_class=SlashSeparatedCourseKey):
     """Returns the course ID (org/number/run)."""
     return key_class(course_data['org'], course_data['number'], course_data['run'])
 
-
-def _build_other_filter():
-    """
-    Returns OTHER filter_params string.
-    """
-    all_filters = settings.FILES_AND_UPLOAD_TYPE_FILTERS
-    where = []
-    for all_filter in all_filters:
-        extension_filters = all_filters[all_filter]
-        where.extend(["JSON.stringify(this.contentType).toUpperCase() != JSON.stringify('{}').toUpperCase()".format(
-            extension_filter) for extension_filter in extension_filters])
-    filter_params = {
-        "$where": ' && '.join(where),
-    }
-    return filter_params
