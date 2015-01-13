@@ -397,7 +397,7 @@ def get_module_system_for_user(user, field_data_cache,
             course = modulestore().get_course(course_key)
             content = modulestore().get_item(content_key)
             if getattr(course, 'entrance_exam_enabled', False) \
-                and getattr(content, 'in_entrance_exam', False):
+                    and getattr(content, 'in_entrance_exam', False):
                 exam_key = UsageKey.from_string(course.entrance_exam_id)
                 exam_descriptor = modulestore().get_item(exam_key)
                 exam_modules = yield_dynamic_descriptor_descendents(
