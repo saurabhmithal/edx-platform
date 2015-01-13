@@ -211,6 +211,16 @@ class CachingDescriptorSystem(MakoDescriptorSystem, EditInfoRuntimeMixin):
         self.cached_modules = {}
 
     def get_block(self, usage_id):
+        """
+        Overrides the base impl to figure out if you want draft or published and then
+        to strip the revision if it got a draft
+        """
+        if self.modulestore.get_branch_setting() == ModuleStoreEnum.Branch.draft_preferred:
+            try:
+                block = super(CachingDescriptorSystem, self).get_block(as_draft(usage_id))
+                return wrap_draft(block)
+            except ItemNotFoundError:
+                pass  # do the below
         block = super(CachingDescriptorSystem, self).get_block(usage_id)
         return wrap_draft(block)
 
