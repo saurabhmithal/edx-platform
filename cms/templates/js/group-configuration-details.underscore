@@ -1,4 +1,4 @@
-<div class="collection wrapper-group-configuration">
+<div class="collection-details wrapper-group-configuration">
     <header class="collection-header group-configuration-header">
         <h3 class="title group-configuration-title">
             <a href="#" class="toggle group-toggle <% if(showGroups){ print('hide'); } else { print('show'); } %>-groups">

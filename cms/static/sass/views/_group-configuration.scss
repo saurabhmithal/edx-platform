@@ -42,7 +42,11 @@
       position: relative;
       outline: none;
 
-      .collection {
+      &:hover .collection .actions {
+        opacity: 1.0;
+      }
+
+      .collection-details {
         padding: $baseline ($baseline*1.5);
       }
 
@@ -106,17 +110,11 @@
             @include box-sizing(border-box);
             display: table-cell;
             margin-right: 1%;
+            padding: ($baseline/4) 0;
 
             &.collection-usage-count {
               font-style: italic;
             }
-          }
-        }
-
-        &.collection-info {
-
-          li {
-            padding: ($baseline/4) 0;
           }
         }
 
@@ -191,10 +189,10 @@
         padding: $baseline ($baseline*1.5) $baseline ($baseline*2.5);
         color: $gray-l1;
 
-        .group-configuration-usage {
+        .usage {
           margin-left: $baseline;
 
-          .group-configuration-usage-unit {
+          .usage-unit {
             padding: ($baseline/4) 0;
 
             a {
@@ -210,28 +208,6 @@
               margin: ($baseline/4) ($baseline/2) 0 ($baseline*1.5);
               color: $red-l2;
             }
-          }
-        }
-      }
-
-      .usage {
-        margin-left: $baseline;
-
-        .usage-unit {
-          padding: ($baseline/4) 0;
-
-          a {
-            font-weight: 600;
-          }
-
-          .fa-warning {
-            margin: ($baseline/4) ($baseline/2) 0 ($baseline*1.5);
-            color: $orange;
-          }
-
-          .fa-times-circle {
-            margin: ($baseline/4) ($baseline/2) 0 ($baseline*1.5);
-            color: $red-l2;
           }
         }
       }
@@ -279,6 +255,113 @@
           color: $gray;
         }
 
+
+        .collection-fields {
+          @extend %cont-no-list;
+          margin-bottom: $baseline;
+        }
+
+        .field {
+          margin: 0 0 ($baseline*0.75) 0;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          &.required {
+
+            label {
+              @extend %t-strong;
+            }
+
+            label:after {
+              margin-left: ($baseline/4);
+              content: "*";
+            }
+          }
+
+          label, input, textarea {
+            display: block;
+          }
+
+          textarea {
+            resize: vertical;
+          }
+
+          label {
+            @extend %t-copy-sub1;
+            @include transition(color, 0.15s, ease-in-out);
+            margin: 0 0 ($baseline/4) 0;
+
+            &.is-focused {
+              color: $blue;
+            }
+          }
+
+          //this section is borrowed from _account.scss - we should clean up and unify later
+          input, textarea {
+            @extend %t-copy-base;
+            height: 100%;
+            width: 100%;
+            padding: ($baseline/2);
+
+            &.long {
+              width: 100%;
+            }
+
+            &.short {
+              width: 25%;
+            }
+
+            ::-webkit-input-placeholder {
+               color: $gray-l4;
+            }
+
+            :-moz-placeholder {
+               color: $gray-l3;
+            }
+
+            ::-moz-placeholder {
+               color: $gray-l3;
+            }
+
+            :-ms-input-placeholder {
+               color: $gray-l3;
+            }
+
+            &:focus {
+              + .tip {
+                color: $gray;
+              }
+            }
+          }
+
+          &.error {
+              label {
+                color: $red;
+              }
+
+              input {
+                border-color: $red;
+              }
+          }
+        }
+
+        label.required {
+          @extend %t-strong;
+
+          &:after {
+            margin-left: ($baseline/4);
+            content: "*";
+          }
+        }
+
+        .field.add-collection-name label {
+          @extend %t-title5;
+          display: inline-block;
+          vertical-align: bottom;
+        }
+
         .actions {
           box-shadow: inset 0 1px 2px $shadow;
           border-top: 1px solid $gray-l1;
@@ -323,149 +406,6 @@
             @extend %t-strong;
           }
         }
-
-        .groups-fields {
-          @extend %cont-no-list;
-
-          .field {
-            margin: 0 0 ($baseline*0.75) 0;
-
-            &:last-child {
-              margin-bottom: 0;
-            }
-
-            &.required {
-
-              label {
-                @extend %t-strong;
-              }
-
-              label:after {
-                margin-left: ($baseline/4);
-                content: "*";
-              }
-            }
-
-            label, input, textarea {
-              display: block;
-            }
-
-            textarea {
-              resize: vertical;
-            }
-
-            label {
-              @extend %t-copy-sub1;
-              @include transition(color, 0.15s, ease-in-out);
-              margin: 0 0 ($baseline/4) 0;
-
-              &.is-focused {
-                color: $blue;
-              }
-            }
-
-            //this section is borrowed from _account.scss - we should clean up and unify later
-            input, textarea {
-              @extend %t-copy-base;
-              height: 100%;
-              width: 100%;
-              padding: ($baseline/2);
-
-              &.long {
-                width: 100%;
-              }
-
-              &.short {
-                width: 25%;
-              }
-
-              ::-webkit-input-placeholder {
-                 color: $gray-l4;
-              }
-
-              :-moz-placeholder {
-                 color: $gray-l3;
-              }
-
-              ::-moz-placeholder {
-                 color: $gray-l3;
-              }
-
-              :-ms-input-placeholder {
-                 color: $gray-l3;
-              }
-
-              &:focus {
-                + .tip {
-                  color: $gray;
-                }
-              }
-            }
-
-            &.error {
-                label {
-                  color: $red;
-                }
-
-                input {
-                  border-color: $red;
-                }
-            }
-          }
-
-          label.required {
-            @extend %t-strong;
-
-            &:after {
-              margin-left: ($baseline/4);
-              content: "*";
-            }
-          }
-
-          .field-group {
-            @include clearfix();
-            margin: 0 0 ($baseline/2) 0;
-            padding: ($baseline/4) 0 0 0;
-
-            .field {
-              display: inline-block;
-              vertical-align: middle;
-              margin: 0 3% 0 0;
-              position: relative;
-
-              &.long {
-                width: 80%;
-              }
-
-              &.short {
-                width: 10%;
-              }
-            }
-
-            .action-close {
-              @include transition(color $tmg-f2 ease-in-out);
-              @extend %t-action1;
-              display: inline-block;
-              border: 0;
-              padding: 0;
-              background: transparent;
-              color: $blue-l3;
-              vertical-align: middle;
-
-              &:hover {
-                color: $blue;
-              }
-            }
-          }
-        }
-
-        .collection-fields {
-          margin-bottom: $baseline;
-        }
-      }
-
-      &:hover .wrapper-collection .actions {
-        opacity: 1.0;
       }
 
       .action-add-item {
@@ -479,468 +419,7 @@
       }
     }
 
-    .group-configuration {
-      @extend %ui-window;
-      position: relative;
-      outline: none;
-
-      .group-configuration-details {
-        .wrapper-group-configuration {
-          padding: $baseline ($baseline*1.5);
-
-          .group-configuration-header {
-            margin-bottom: 0;
-            border-bottom: 0;
-            padding-bottom: 0;
-          }
-
-          .group-configuration-title {
-            @extend %t-title5;
-            @extend %t-strong;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-right: ($baseline*14);
-            color: $black;
-
-            .group-toggle {
-              display: inline-block;
-              padding-left: $baseline;
-              color: $black;
-
-              &:hover, &:focus {
-                color: $blue;
-              }
-            }
-          }
-
-          .group-configuration-info {
-            @extend %t-copy-sub1;
-            color: $gray-l1;
-            margin-left: $baseline;
-
-            &.group-configuration-info-inline {
-              display: table;
-              width: 70%;
-              margin: ($baseline/4) 0 ($baseline/2) $baseline;
-
-              li {
-                @include box-sizing(border-box);
-                display: table-cell;
-                margin-right: 1%;
-
-                &.group-configuration-usage-count {
-                  font-style: italic;
-                }
-              }
-            }
-
-            &.group-configuration-info-block {
-              li {
-                padding: ($baseline/4) 0;
-              }
-            }
-
-            .group-configuration-label {
-              text-transform: uppercase;
-            }
-
-            .group-configuration-description {
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-          }
-
-          .ui-toggle-expansion {
-            @include transition(rotate .15s ease-in-out .25s);
-            @extend %t-action1;
-            display: inline-block;
-            width: ($baseline*0.75);
-            vertical-align: baseline;
-            margin-left: -$baseline;
-          }
-
-          &.is-selectable {
-            @extend %ui-fake-link;
-
-            &:hover {
-              color: $blue;
-
-              .ui-toggle-expansion {
-                color: $blue;
-              }
-            }
-          }
-
-          .groups {
-            margin-left: $baseline;
-            margin-bottom: ($baseline*0.75);
-
-            .group {
-              @extend %t-copy-lead1;
-              padding: ($baseline/7) 0 ($baseline/4);
-              border-top: 1px solid $gray-l4;
-              white-space: nowrap;
-
-              &:first-child {
-                border-top: none;
-              }
-
-              .group-name {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                display: inline-block;
-                vertical-align: middle;
-                width: 75%;
-                margin-right: 5%;
-              }
-
-              .group-allocation {
-                display: inline-block;
-                vertical-align: middle;
-                width: 20%;
-                color: $gray-l1;
-                text-align: right;
-              }
-            }
-          }
-
-          .actions {
-            @include transition(opacity .15s .25s ease-in-out);
-            opacity: 0.0;
-            position: absolute;
-            top: $baseline;
-            right: $baseline;
-
-            .action {
-              display: inline-block;
-              vertical-align: middle;
-              margin-right: ($baseline/4);
-
-              .edit {
-                @extend %ui-btn-non-blue;
-              }
-
-              .delete {
-                @extend %ui-btn-non;
-
-                &.is-disabled {
-                  background-color: $gray-l3;
-                  color: $gray-l6;
-                }
-              }
-            }
-          }
-        }
-
-        .wrapper-group-configuration-usages {
-          @extend %t-copy-sub1;
-          box-shadow: 0 2px 2px 0 $shadow inset;
-          padding: $baseline ($baseline*1.5) $baseline ($baseline*2.5);
-          color: $gray-l1;
-
-          .group-configuration-usage {
-            margin-left: $baseline;
-
-            .group-configuration-usage-unit {
-              padding: ($baseline/4) 0;
-
-              a {
-                font-weight: 600;
-              }
-
-              .fa-warning {
-                margin: ($baseline/4) ($baseline/2) 0 ($baseline*1.5);
-                color: $orange;
-              }
-
-              .fa-times-circle {
-                margin: ($baseline/4) ($baseline/2) 0 ($baseline*1.5);
-                color: $red-l2;
-              }
-            }
-          }
-        }
-      }
-
-      .wrapper-group-configuration-validation {
-        @extend %t-copy-sub1;
-        background-color: $gray-l6;
-        margin-top: $baseline;
-        padding: $baseline ($baseline*1.5) $baseline ($baseline*1.5);
-
-        .fa-warning {
-          margin: ($baseline/2) $baseline 0 0;
-          color: $orange;
-          float: left;
-        }
-
-        .group-configuration-validation-text {
-          overflow: auto;
-        }
-      }
-
-      .group-configuration-edit {
-        @include box-sizing(border-box);
-        border-radius: 2px;
-        width: 100%;
-        background: $white;
-
-        .wrapper-form {
-          padding: $baseline ($baseline*1.5);
-        }
-
-        .tip {
-          @extend %t-copy-sub2;
-          @include transition(color, 0.15s, ease-in-out);
-          display: block;
-          margin-top: ($baseline/4);
-          color: $gray-l3;
-        }
-
-        .is-focused .tip {
-          color: $gray;
-        }
-
-        .actions {
-          box-shadow: inset 0 1px 2px $shadow;
-          border-top: 1px solid $gray-l1;
-          padding: ($baseline*0.75) $baseline;
-          background: $gray-l6;
-
-          .action {
-            margin-right: ($baseline/4);
-
-            &:last-child {
-              margin-right: 0;
-            }
-          }
-
-          // add a group is below with groups styling
-          .action-primary {
-            @extend %btn-primary-blue;
-            padding: ($baseline/4) $baseline;
-          }
-
-          .action-secondary {
-            @extend %btn-secondary-gray;
-            padding: ($baseline/4) $baseline;
-          }
-
-          .wrapper-delete-button {
-            float: right;
-            padding: ($baseline/4) ($baseline/2);
-
-            .is-disabled {
-              color: $gray-l3;
-            }
-          }
-        }
-
-        .copy {
-          @extend %t-copy-sub2;
-          margin: ($baseline) 0 ($baseline/2) 0;
-          color: $gray;
-
-          strong {
-            @extend %t-strong;
-          }
-        }
-
-        .groups-fields,
-        .group-configuration-fields {
-          @extend %cont-no-list;
-
-          .field {
-            margin: 0 0 ($baseline*0.75) 0;
-
-            &:last-child {
-              margin-bottom: 0;
-            }
-
-            &.required {
-
-              label {
-                @extend %t-strong;
-              }
-
-              label:after {
-                margin-left: ($baseline/4);
-                content: "*";
-              }
-            }
-
-            label, input, textarea {
-              display: block;
-            }
-
-            textarea {
-              resize: vertical;
-            }
-
-            label {
-              @extend %t-copy-sub1;
-              @include transition(color, 0.15s, ease-in-out);
-              margin: 0 0 ($baseline/4) 0;
-
-              &.is-focused {
-                color: $blue;
-              }
-            }
-
-            //this section is borrowed from _account.scss - we should clean up and unify later
-            input, textarea {
-              @extend %t-copy-base;
-              height: 100%;
-              width: 100%;
-              padding: ($baseline/2);
-
-              &.long {
-                width: 100%;
-              }
-
-              &.short {
-                width: 25%;
-              }
-
-              ::-webkit-input-placeholder {
-                 color: $gray-l4;
-              }
-
-              :-moz-placeholder {
-                 color: $gray-l3;
-              }
-
-              ::-moz-placeholder {
-                 color: $gray-l3;
-              }
-
-              :-ms-input-placeholder {
-                 color: $gray-l3;
-              }
-
-              &:focus {
-                + .tip {
-                  color: $gray;
-                }
-              }
-            }
-
-            &.error {
-                label {
-                  color: $red;
-                }
-
-                input {
-                  border-color: $red;
-                }
-            }
-
-            &.add-group-configuration-name label {
-              @extend %t-title5;
-              display: inline-block;
-              width: 50%;
-              padding-right: 5%;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              vertical-align: bottom;
-            }
-
-            .group-configuration-id {
-              display: inline-block;
-              width: 45%;
-              text-align: right;
-              vertical-align: top;
-              color: $gray-l1;
-
-              .group-configuration-value {
-                @extend %t-strong;
-                white-space: nowrap;
-                margin-left: ($baseline*0.5);
-              }
-            }
-
-            &.group-allocation {
-              color: $gray-l1;
-            }
-          }
-
-          label.required {
-            @extend %t-strong;
-
-            &:after {
-              margin-left: ($baseline/4);
-              content: "*";
-            }
-          }
-
-          .field-group {
-            @include clearfix();
-            margin: 0 0 ($baseline/2) 0;
-            padding: ($baseline/4) 0 0 0;
-
-            .group-allocation,
-            .field {
-              display: inline-block;
-              vertical-align: middle;
-              margin: 0 3% 0 0;
-            }
-
-            .group-allocation {
-              max-width: 10%;
-              min-width: 5%;
-              color: $gray-l1;
-            }
-
-            .field {
-              position: relative;
-
-              &.long {
-                width: 80%;
-              }
-
-              &.short {
-                width: 10%;
-              }
-            }
-
-            .action-close {
-              @include transition(color $tmg-f2 ease-in-out);
-              @extend %t-action1;
-              display: inline-block;
-              border: 0;
-              padding: 0;
-              background: transparent;
-              color: $blue-l3;
-              vertical-align: middle;
-
-              &:hover {
-                color: $blue;
-              }
-            }
-          }
-        }
-
-        .group-configuration-fields {
-          margin-bottom: $baseline;
-        }
-      }
-
-      &:hover .wrapper-group-configuration .actions {
-        opacity: 1.0;
-      }
-
-      .action-add-group {
-        @extend %ui-btn-flat-outline;
-        @extend %t-action2;
-        @extend %t-strong;
-        display: block;
-        width: 100%;
-        margin: ($baseline*1.5) 0 0 0;
-        padding: ($baseline/2);
-      }
-    }
-
-    // add/new items
+    // add/new collection
     .action-add {
       @extend %ui-btn-flat-outline;
       display: block;
@@ -959,7 +438,7 @@
       }
     }
 
-    //specific group-type styles
+    // specific group-type styles
     .content-groups {
 
       .collection-header{
@@ -972,110 +451,147 @@
 
     .experiment-groups {
 
-      .group-configuration-info {
-        @extend %t-copy-sub1;
-        color: $gray-l1;
-        margin-left: $baseline;
+      .group-configuration-details {
 
-        &.group-configuration-info-inline {
-          display: table;
-          width: 70%;
-          margin: ($baseline/4) 0 ($baseline/2) $baseline;
+        .group-configuration-info {
+          @extend %t-copy-sub1;
+          color: $gray-l1;
+          margin-left: $baseline;
 
-          li {
-            @include box-sizing(border-box);
-            display: table-cell;
-            margin-right: 1%;
+          &.group-configuration-info-inline {
+            display: table;
+            width: 70%;
+            margin: ($baseline/4) 0 ($baseline/2) $baseline;
 
-            &.group-configuration-usage-count {
-              font-style: italic;
+            li {
+              @include box-sizing(border-box);
+              display: table-cell;
+              margin-right: 1%;
+
+              &.group-configuration-usage-count {
+                font-style: italic;
+              }
+            }
+          }
+
+          &.group-configuration-info-block {
+            li {
+              padding: ($baseline/4) 0;
+            }
+          }
+
+          .group-configuration-label {
+            text-transform: uppercase;
+          }
+
+          .group-configuration-description {
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+
+        .groups {
+          margin-left: $baseline;
+          margin-bottom: ($baseline*0.75);
+
+          .group {
+            @extend %t-copy-lead1;
+            padding: ($baseline/7) 0 ($baseline/4);
+            border-top: 1px solid $gray-l4;
+            white-space: nowrap;
+
+            &:first-child {
+              border-top: none;
+            }
+
+            .group-name {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: inline-block;
+              vertical-align: middle;
+              width: 75%;
+              margin-right: 5%;
+            }
+
+            .group-allocation {
+              display: inline-block;
+              vertical-align: middle;
+              width: 20%;
+              color: $gray-l1;
+              text-align: right;
             }
           }
         }
-
-        &.group-configuration-info-block {
-          li {
-            padding: ($baseline/4) 0;
-          }
-        }
-
-        .group-configuration-label {
-          text-transform: uppercase;
-        }
-
-        .group-configuration-description {
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
       }
 
-      .groups {
-        margin-left: $baseline;
-        margin-bottom: ($baseline*0.75);
+      .group-configuration-edit {
 
-        .group {
-          @extend %t-copy-lead1;
-          padding: ($baseline/7) 0 ($baseline/4);
-          border-top: 1px solid $gray-l4;
-          white-space: nowrap;
+        .add-collection-name label {
+          width: 50%;
+          padding-right: 5%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          vertical-align: bottom;
+        }
 
-          &:first-child {
-            border-top: none;
+        .group-configuration-id {
+          display: inline-block;
+          width: 45%;
+          text-align: right;
+          vertical-align: top;
+          color: $gray-l1;
+
+          .group-configuration-value {
+            @extend %t-strong;
+            white-space: nowrap;
+            margin-left: ($baseline*0.5);
           }
+        }
 
-          .group-name {
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .field-group {
+          @include clearfix();
+          margin: 0 0 ($baseline/2) 0;
+          padding: ($baseline/4) 0 0 0;
+
+          .group-allocation,
+          .field {
             display: inline-block;
             vertical-align: middle;
-            width: 75%;
-            margin-right: 5%;
+            margin: 0 3% 0 0;
           }
 
           .group-allocation {
-            display: inline-block;
-            vertical-align: middle;
-            width: 20%;
+            max-width: 10%;
+            min-width: 5%;
             color: $gray-l1;
-            text-align: right;
           }
-        }
-      }
 
-      .group-configuration-info {
-        @extend %t-copy-sub1;
-        color: $gray-l1;
-        margin-left: $baseline;
+          .field {
+            position: relative;
 
-        &.group-configuration-info-inline {
-          display: table;
-          width: 70%;
-          margin: ($baseline/4) 0 ($baseline/2) $baseline;
+            &.long {
+              width: 80%;
+            }
 
-          li {
-            @include box-sizing(border-box);
-            display: table-cell;
-            margin-right: 1%;
-
-            &.group-configuration-usage-count {
-              font-style: italic;
+            &.short {
+              width: 10%;
             }
           }
-        }
 
-        &.group-configuration-info-block {
-          li {
-            padding: ($baseline/4) 0;
+          .action-close {
+            @include transition(color $tmg-f2 ease-in-out);
+            @extend %t-action1;
+            display: inline-block;
+            border: 0;
+            padding: 0;
+            background: transparent;
+            color: $blue-l3;
+            vertical-align: middle;
+
+            &:hover {
+              color: $blue;
+            }
           }
-        }
-
-        .group-configuration-label {
-          text-transform: uppercase;
-        }
-
-        .group-configuration-description {
-          overflow: hidden;
-          text-overflow: ellipsis;
         }
       }
     }

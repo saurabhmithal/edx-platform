@@ -19,7 +19,7 @@ function(BaseView, _, gettext, str) {
             var index = this.model.collection.indexOf(this.model);
 
             return [
-                'collection-details',
+                'collection',
                 'group-configuration-details',
                 'group-configuration-details-' + index
             ].join(' ');
